@@ -3,97 +3,97 @@ body {
 	overflow: hidden;
 }
 .wrapper {
-    width: 900px;
-    height: 900px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    display: flex;
-    flex-wrap: wrap;
+  width: 900px;
+  height: 900px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .cube {
-    width: 296px;
-    height: 296px;
-    border: 2px solid #000;
-    position: relative;
+  width: 296px;
+  height: 296px;
+  border: 2px solid #000;
+  position: relative;
 }
 
 .cube_top-left {
-    border-top-color: transparent;
-    border-left-color: transparent;
+  border-top-color: transparent;
+  border-left-color: transparent;
 }
 
 .cube_top-center {
-    border-top-color: transparent;
+  border-top-color: transparent;
 }
 
 .cube_top-right {
-    border-top-color: transparent;
-    border-right-color: transparent;
+  border-top-color: transparent;
+  border-right-color: transparent;
 }
 
 .cube_center-left {
-    border-left-color: transparent;
+  border-left-color: transparent;
 }
 
 .cube_center-right {
-    border-right-color: transparent;
+  border-right-color: transparent;
 }
 
 .cube_bottom-left {
-    border-bottom-color: transparent;
-    border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
 }
 
 .cube_bottom-center {
-    border-bottom-color: transparent;
+  border-bottom-color: transparent;
 }
 
 .cube_bottom-right {
-    border-bottom-color: transparent;
-    border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
 }
 
 .cube__x {
-    display: none;
+  display: none;
 }
 
 .cube__x::before {
-    content: "";
-    display: block;
-    width: 200px;
-    height: 20px;
-    background-color: #000;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%) rotate(-45deg);
+  content: "";
+  display: block;
+  width: 200px;
+  height: 20px;
+  background-color: #000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%) rotate(-45deg);
 }
 
 .cube__x::after {
-    content: "";
-    display: block;
-    width: 200px;
-    height: 20px;
-    background-color: #000;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%) rotate(45deg);
+  content: "";
+  display: block;
+  width: 200px;
+  height: 20px;
+  background-color: #000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%) rotate(45deg);
 }
 
 .cube__o {
-    display: none;
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-    border: 20px solid #000;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+  display: none;
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  border: 20px solid #000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 
 .finish > .cube__o {
@@ -144,18 +144,46 @@ body {
 }
 
 .levels.showing {
-	top: 0;
+	top: 50%;
 	transition: .5s;
 }
 
 .level {
-	padding: 3px 10px;
-  background: #ccc;
-  border: 2px solid #a9a9a9;
-  cursor: pointer;
+  position: relative;
   min-width: 100px;
+  margin-right: 40px;
+  padding: 12px 15px;
+  border: 2px solid #001ba2;
+  border-radius: 5px;
+  background: #423ed8;
+  color: #eeeeee;
+  font-family: sans-serif;
   text-align: center;
-  color: #797979;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.level:last-child {
+  margin-right: 0;
+}
+
+.level:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background: #fff;
+  transform: translateX(-20px) skewX(-21deg);
+  transition: .3s;
+  opacity: .2;
+}
+
+.level:hover:before {
+  transform: translateX(100px) skewX(-21deg);
+  transition: .3s;
 }
 
 .win-img {

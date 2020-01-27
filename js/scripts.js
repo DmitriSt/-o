@@ -251,7 +251,7 @@ $('.cube').click(function() {
 // start game animations
 function start() {
 	$('.levels').removeClass('showing');
-	$('.start-wrapper').animate({height: 0}, 600);
+	$('.start-wrapper').animate({opacity: 0}, 600, () => {$('.start-wrapper').css('visibility', 'hidden')});
 }
 
 // check level & start game

@@ -1,9 +1,15 @@
 var arrayID = [1,2,3,4,5,6,7,8,9];
-var finish = false;
+
+var mainSettings = {
+	finish: false,
+	level: '' 
+}
 
 function addX(cube) {
-	$(cube).addClass('x')
-	$(cube).find('.cube__x').css('display', 'block');
+	$(cube)
+		.addClass('x')
+		.find('.cube__x')
+		.css('display', 'block');
 }
 
 function addOLight(arr) {
@@ -54,6 +60,7 @@ function addOLight(arr) {
 
 	$block.delay(1000).queue(function() {
 		$block.addClass('o');
+		mainSettings[`${$block.attr('id')}`] = 'o'
 		var idCheckItem = $block.attr('id');
 		arrayID = jQuery.grep(arrayID, function(value) {
 			return value != idCheckItem;
@@ -159,38 +166,38 @@ function checkStatus() {
 	if ($('#1').hasClass('x') && $('#2').hasClass('x') && $('#3').hasClass('x') ||
 			$('#1').hasClass('o') && $('#2').hasClass('o') && $('#3').hasClass('o')) {
 		$('#1, #2, #3').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('#1').hasClass('x') && $('#4').hasClass('x') && $('#7').hasClass('x') ||
 							$('#1').hasClass('o') && $('#4').hasClass('o') && $('#7').hasClass('o')) {
 		$('#1, #4, #7').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('#2').hasClass('x') && $('#5').hasClass('x') && $('#8').hasClass('x') ||
 							$('#2').hasClass('o') && $('#5').hasClass('o') && $('#8').hasClass('o')) {
 		$('#2, #5, #8').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('#1').hasClass('x') && $('#5').hasClass('x') && $('#9').hasClass('x') ||
 							$('#1').hasClass('o') && $('#5').hasClass('o') && $('#9').hasClass('o')) {
 		$('#1, #5, #9').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('#3').hasClass('x') && $('#6').hasClass('x') && $('#9').hasClass('x') ||
 							$('#3').hasClass('o') && $('#6').hasClass('o') && $('#9').hasClass('o')) {
 		$('#3, #6, #9').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('#4').hasClass('x') && $('#5').hasClass('x') && $('#6').hasClass('x') ||
 							$('#4').hasClass('o') && $('#5').hasClass('o') && $('#6').hasClass('o')) {
 		$('#4, #5, #6').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('#7').hasClass('x') && $('#8').hasClass('x') && $('#9').hasClass('x') ||
 							$('#7').hasClass('o') && $('#8').hasClass('o') && $('#9').hasClass('o')) {
 		$('#7, #8, #9').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('#3').hasClass('x') && $('#5').hasClass('x') && $('#7').hasClass('x') ||
 							$('#3').hasClass('o') && $('#5').hasClass('o') && $('#7').hasClass('o')) {
 		$('#3, #5, #7').addClass('finish');
-		finish = true;
+		mainSettings.finish = true;
 	} else if ($('.x').length === 5 || $('.o').length === 5) {
 		showMessage("НИЧЬЯ");
-		finish = true;
+		mainSettings.finish = true;
 	}
 
 	if ($('.x.finish').length) {
@@ -205,11 +212,12 @@ function checkStatus() {
 	}
 }
 
-// click on empty coub
+// click on empty cube
 $('.cube').click(function() {
 	if (!$(this).hasClass('x') && !$(this).hasClass('o')) {
-		if (!finish && $('.x').length === $('.o').length) {
-	    var idCheckItem = $(this).attr('id');
+		if (!mainSettings.finish && $('.x').length === $('.o').length) {
+			var idCheckItem = $(this).attr('id');
+			mainSettings[`${idCheckItem}`] = 'x'
 	    arrayID = jQuery.grep(arrayID, function(value) {
 	      return value != idCheckItem;
 	    });
@@ -218,17 +226,17 @@ $('.cube').click(function() {
 			
 			if ($('.x').length >= 3) checkStatus()
 
-			if (!finish) {
-				if ($('.wrapper').hasClass('light')) {
+			if (!mainSettings.finish) {
+				if (mainSettings.level === 'light') {
 					addOLight(arrayID);
 				}
-				if ($('.wrapper').hasClass('middle')) {
+				if (mainSettings.level === 'middle') {
 					addOHard(arrayID, 1000);
 				}
 			}
 		}
 
-		if (!finish && $('.wrapper').hasClass('hard') && $('.o')) {
+		if (!mainSettings.finish && mainSettings.level === 'hard' && $('.o')) {
 			var idCheckItem = $(this).attr('id');
 	    arrayID = jQuery.grep(arrayID, function(value) {
 	      return value != idCheckItem;
@@ -238,7 +246,7 @@ $('.cube').click(function() {
 
 			if ($('.x').length >= 3) checkStatus()
 
-			if (!finish) {
+			if (!mainSettings.finish) {
 				addOHard(arrayID, 1000);
 			}
 		}
@@ -250,22 +258,27 @@ $('.cube').click(function() {
 
 // start game animations
 function start() {
-	$('.levels').removeClass('showing');
-	$('.start-wrapper').animate({opacity: 0}, 600, () => {$('.start-wrapper').css('visibility', 'hidden')});
+	$('.start-wrapper')
+		.animate({opacity: 0}, 200, () => {
+			$('.start-wrapper').css('visibility', 'hidden')
+		});
 }
 
 // check level & start game
 function levelSelection(event) {
 	if (event.hasClass('light')) {
-		$('.wrapper').addClass('light')
+		// $('.wrapper').addClass('light')
+		mainSettings.level = 'light'
 		start()
 	}
 	if (event.hasClass('middle')) {
-		$('.wrapper').addClass('middle')
+		// $('.wrapper').addClass('middle')
+		mainSettings.level = 'middle'
 		start()
 	}
 	if (event.hasClass('hard')) {
-		$('.wrapper').addClass('hard');
+		// $('.wrapper').addClass('hard');
+		mainSettings.level = 'hard'
 		start();
 		addOHard(arrayID, 300);
 	}

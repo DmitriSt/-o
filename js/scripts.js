@@ -18,7 +18,7 @@ function addOLight(arr) {
 							$('#4').hasClass('x') && $('#7').hasClass('x') ||
 							$('#5').hasClass('x') && $('#9').hasClass('x')) && !$('#1').hasClass('o')) {
 		$block = $('#1');
-	} else if (($('#5').hasClass('x') && $('#7').hasClass('x') ||
+	} else if (($('#5').hasClass('x') && $('#8').hasClass('x') ||
 							$('#1').hasClass('x') && $('#3').hasClass('x')) && !$('#2').hasClass('o')) {
 		$block = $('#2');
 	}	else if (($('#5').hasClass('x') && $('#6').hasClass('x') ||

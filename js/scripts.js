@@ -77,7 +77,7 @@ function hardGame(arr, delay) {
 	if ((e[2] && e[3] || e[4] && e[7] || e[5] && e[9]) && !p[1]) {
 		e[1] = "o"
 		potentialBlock = $('#1');
-	} else if ((e[5] && e[7] || e[1] && e[3]) && !p[2]) {
+	} else if ((e[5] && e[8] || e[1] && e[3]) && !p[2]) {
 		e[2] = "o"
 		potentialBlock = $('#2');
 	} else if ((e[1] && e[2] || e[6] && e[9] || e[5] && e[7]) && !p[3]) {
@@ -123,8 +123,8 @@ function hardGame(arr, delay) {
 	} else if ((p[1] && p[4] || p[8] && p[9] || p[3] && p[5]) && !e[7]) {
 		e[7] = "o"
 		potentialBlock = $('#7');
-	} else if ((p[2] && p[5] || p[7] && p[9]) && !p[1]) {
-		e[1] = "o"
+	} else if ((p[2] && p[5] || p[7] && p[9]) && !e[8]) {
+		e[8] = "o"
 		potentialBlock = $('#8');
 	} else if ((p[3] && p[6] || p[7] && p[8] || p[1] && p[5]) && !e[9]) {
 		e[9] = "o"
@@ -133,8 +133,8 @@ function hardGame(arr, delay) {
 		potentialBlock = $(`#${arr[rand]}`);
 	}
 
-	if (potentialBlock.hasClass('o')) {
-		hardGame(arr,1000);
+	if (potentialBlock.hasClass('o') || potentialBlock.hasClass('x')) {
+		hardGame(arr);
 	}
 
 	potentialBlock.delay(delay).queue(function() {
@@ -188,7 +188,7 @@ function checkStatus() {
 	if ($('.x.finish').length) {
 		if (!mainSettings.twoPlayers) {
 			showMessage("WIN!");
-			$('.win-img').animate({bottom:0},1000);
+			// $('.win-img').animate({bottom:0},1000);
 		} else {
 			showMessage("X WINS!");
 		}
@@ -197,8 +197,8 @@ function checkStatus() {
 	if ($('.o.finish').length) {
 		if (!mainSettings.twoPlayers) {
 			showMessage("LOSE!");
-			$('.img-loser-1, .img-loser-2, .img-loser-3').delay(1000).animate({top:0},700);
-			$('.img-loser-4, .img-loser-5, .img-loser-6').delay(1000).animate({bottom:0},700);
+			// $('.img-loser-1, .img-loser-2, .img-loser-3').delay(1000).animate({top:0},700);
+			// $('.img-loser-4, .img-loser-5, .img-loser-6').delay(1000).animate({bottom:0},700);
 		} else {
 			showMessage("O WINS!");
 		}
@@ -209,14 +209,17 @@ function checkStatus() {
 $('.cube').click(function() {
 	let idCheckItem = $(this).attr('id');
 
-
 	if (!$(this).hasClass('x') && !$(this).hasClass('o')) {
 
-		if (!mainSettings.finish && !mainSettings.twoPlayers && $('.x').length === $('.o').length) {
-			p[`${idCheckItem}`] = 'x'
+		if (!mainSettings.finish && 
+				mainSettings.level !== 'hard' && 
+				!mainSettings.twoPlayers && 
+				$('.x').length === $('.o').length) 
+		{
 			arrayID = jQuery.grep(arrayID, function(value) {
 				return value != idCheckItem;
 			});
+			p[`${idCheckItem}`] = 'x'
 
 			addSymbol(this, 'x');
 			
@@ -234,6 +237,9 @@ $('.cube').click(function() {
 		} else if (!mainSettings.finish && mainSettings.twoPlayers) {
 			if (mainSettings.first) {
 				p[`${idCheckItem}`] = 'x'
+				arrayID = jQuery.grep(arrayID, function(value) {
+					return value != idCheckItem;
+				});
 				addSymbol(this, 'x');
 			} else {
 				e[`${idCheckItem}`] = 'o'
@@ -247,19 +253,18 @@ $('.cube').click(function() {
 			}
 		}
 
-		if (!mainSettings.finish && mainSettings.level === 'hard' && $('.x').length < $('.o').length) {
-			p[`${idCheckItem}`] = 'x'
-			arrayID = jQuery.grep(arrayID, function(value) {
-				return value != idCheckItem;
-			});
-			addSymbol(this, 'x');
+		// if (!mainSettings.finish && mainSettings.level === 'hard' && $('.x').length < $('.o').length) {
+		// 	console.log('x.length',$('.x').length)
+		// 	console.log('o.length',$('.o').length)
+		// 	p[`${idCheckItem}`] = 'x'
+		// 	addSymbol(this, 'x');
 
-			if ($('.x').length >= 3) checkStatus()
+		// 	if ($('.o').length >= 3) checkStatus()
 
-			if (!mainSettings.finish) {
-				hardGame(arrayID, 1000);
-			}
-		}
+		// 	if (!mainSettings.finish) {
+		// 		hardGame(arrayID, 1000);
+		// 	}
+		// }
 	}
 })
 
@@ -294,10 +299,10 @@ $('.level').click(function() {
 	} else if (self.hasClass('middle')) {
 		mainSettings.level = 'middle'
 		start()
-	} else if (self.hasClass('hard')) {
-		mainSettings.level = 'hard'
-		start();
-		hardGame(arrayID, 300);
+	// } else if (self.hasClass('hard')) {
+	// 	mainSettings.level = 'hard'
+	// 	start();
+	// 	hardGame(arrayID, 300);
 	}
 })
 

@@ -1,253 +1,263 @@
-var arrayID = [1,2,3,4,5,6,7,8,9];
-
-var mainSettings = {
+const mainSettings = {
 	finish: false,
-	level: '' 
+	level: '',
+	player: {},
+	enemy: {},
+	twoPlayers: false,
+	first: true
 }
 
-function addX(cube) {
+let arrayID = [1,2,3,4,5,6,7,8,9];
+
+const p = mainSettings.player;
+const e = mainSettings.enemy;
+
+function addSymbol(cube, type) {
 	$(cube)
-		.addClass('x')
-		.find('.cube__x')
+		.addClass(type)
+		.find(`.cube__${type}`)
 		.css('display', 'block');
 }
 
-function addOLight(arr) {
-	var rand = Math.floor(Math.random() * arr.length);
-	var $block;
+function ligthGame(arr) {
+	let rand = Math.floor(Math.random() * arr.length);
+	let potentialBlock;
 
-	if (($('#1').hasClass('x') && $('#2').hasClass('x') ||
-			$('#6').hasClass('x') && $('#9').hasClass('x') ||
-			$('#5').hasClass('x') && $('#7').hasClass('x')) && !$('#3').hasClass('o')) {
-		$block = $('#3');
-	} else if (($('#2').hasClass('x') && $('#3').hasClass('x') ||
-							$('#4').hasClass('x') && $('#7').hasClass('x') ||
-							$('#5').hasClass('x') && $('#9').hasClass('x')) && !$('#1').hasClass('o')) {
-		$block = $('#1');
-	} else if (($('#5').hasClass('x') && $('#8').hasClass('x') ||
-							$('#1').hasClass('x') && $('#3').hasClass('x')) && !$('#2').hasClass('o')) {
-		$block = $('#2');
-	}	else if (($('#5').hasClass('x') && $('#6').hasClass('x') ||
-							$('#1').hasClass('x') && $('#7').hasClass('x')) && !$('#4').hasClass('o')) {
-		$block = $('#4');
-	} else if (($('#4').hasClass('x') && $('#6').hasClass('x') ||
-							$('#2').hasClass('x') && $('#8').hasClass('x') ||
-							$('#1').hasClass('x') && $('#9').hasClass('x') ||
-							$('#3').hasClass('x') && $('#7').hasClass('x')) && !$('#5').hasClass('o')) {
-		$block = $('#5');
-	} else if (($('#3').hasClass('x') && $('#9').hasClass('x') ||
-							$('#4').hasClass('x') && $('#5').hasClass('x')) && !$('#6').hasClass('o')) {
-		$block = $('#6');
-	} else if (($('#1').hasClass('x') && $('#4').hasClass('x') ||
-							$('#8').hasClass('x') && $('#9').hasClass('x') ||
-							$('#3').hasClass('x') && $('#5').hasClass('x')) && !$('#7').hasClass('o')) {
-		$block = $('#7');
-
-	} else if (($('#2').hasClass('x') && $('#5').hasClass('x') ||
-							$('#7').hasClass('x') && $('#9').hasClass('x')) && !$('#8').hasClass('o')) {
-		$block = $('#8');
-	} else if (($('#3').hasClass('x') && $('#6').hasClass('x') ||
-							$('#7').hasClass('x') && $('#8').hasClass('x') ||
-							$('#1').hasClass('x') && $('#5').hasClass('x')) && !$('#9').hasClass('o')) {
-		$block = $('#9');
+	if ( (p[2] && p[3] || p[4] && p[7] || p[5] && p[9] ) && !e[1] ) {
+		e[1] = "o"
+		potentialBlock = $('#1');
+	} else if ((p[5] && p[8] || p[1] && p[3]) && !e[2]) {
+		e[2] = "o"
+		potentialBlock = $('#2');
+	}	else if (( p[1] && p[2] || p[6] && p[9] || p[5] && p[7] ) && !e[3] ) {
+		e[3] = "o"
+		potentialBlock = $('#3');
+	}	else if (( p[5] && p[6] || p[1] && p[7] ) && !e[4] ) {
+		e[4] = "o"
+		potentialBlock = $('#4');
+	} else if ((p[4] && p[6] || p[2] && p[8] || p[1] && p[9] || p[3] && p[7] ) && !e[5]) {
+		e[5] = "o"
+		potentialBlock = $('#5');
+	} else if ((p[3] && p[9] || p[4] && p[5]) && !e[6]) {
+		e[6] = "o"
+		potentialBlock = $('#6');
+	} else if ((p[1] && p[4] || p[8] && p[9] || p[3] && p[5]) && !e[7]) {
+		e[7] = "o"
+		potentialBlock = $('#7');
+	} else if ((p[2] && p[5] || p[7] && p[9]) && !e[8]) {
+		e[8] = "o"
+		potentialBlock = $('#8');
+	} else if ((p[3] && p[6] || p[7] && p[8] || p[1] && p[5]) && !e[9]) {
+		e[9] = "o"
+		potentialBlock = $('#9');
 	} else {
-		$block = $(`#${arr[rand]}`);
+		potentialBlock = $(`#${arr[rand]}`);
 	}
 
-	if ($block.hasClass('o')) {
-		addOLight(arr);
+	if (potentialBlock.hasClass('o')) {
+		ligthGame(arr);
 	}
 
-	$block.delay(1000).queue(function() {
-		$block.addClass('o');
-		mainSettings[`${$block.attr('id')}`] = 'o'
-		var idCheckItem = $block.attr('id');
+	potentialBlock.delay(1000).queue(function() {
+		potentialBlock.addClass('o');
+		e[`${potentialBlock.attr('id')}`] = 'o'
+		let idCheckItem = potentialBlock.attr('id');
 		arrayID = jQuery.grep(arrayID, function(value) {
 			return value != idCheckItem;
 		});
-		$block.find('.cube__o').css('display', 'block');
+		potentialBlock.find('.cube__o').css('display', 'block');
 		checkStatus();
 	})
 }
 
-function addOHard(arr, delay) {
-	var rand = Math.floor(Math.random() * arr.length);
-	var $block;
+function hardGame(arr, delay) {
+	let rand = Math.floor(Math.random() * arr.length);
+	let potentialBlock;
 
-	if (($('#1').hasClass('o') && $('#2').hasClass('o') ||
-			$('#6').hasClass('o') && $('#9').hasClass('o') ||
-			$('#5').hasClass('o') && $('#7').hasClass('o')) && !$('#3').hasClass('x')) {
-		$block = $('#3');
-	} else if (($('#2').hasClass('o') && $('#3').hasClass('o') ||
-							$('#4').hasClass('o') && $('#7').hasClass('o') ||
-							$('#5').hasClass('o') && $('#9').hasClass('o')) && !$('#1').hasClass('x')) {
-		$block = $('#1');
-	} else if (($('#5').hasClass('o') && $('#7').hasClass('o') ||
-							$('#1').hasClass('o') && $('#3').hasClass('o')) && !$('#2').hasClass('x')) {
-		$block = $('#2');
-	}	else if (($('#5').hasClass('o') && $('#6').hasClass('o') ||
-							$('#1').hasClass('o') && $('#7').hasClass('o')) && !$('#4').hasClass('x')) {
-		$block = $('#4');
-	} else if (($('#4').hasClass('o') && $('#6').hasClass('o') ||
-							$('#2').hasClass('o') && $('#8').hasClass('o') ||
-							$('#1').hasClass('o') && $('#9').hasClass('o') ||
-							$('#3').hasClass('o') && $('#7').hasClass('o')) && !$('#5').hasClass('x')) {
-		$block = $('#5');
-	} else if (($('#3').hasClass('o') && $('#9').hasClass('o') ||
-							$('#4').hasClass('o') && $('#5').hasClass('o')) && !$('#6').hasClass('x')) {
-		$block = $('#6');
-	} else if (($('#1').hasClass('o') && $('#4').hasClass('o') ||
-							$('#8').hasClass('o') && $('#9').hasClass('o') ||
-							$('#3').hasClass('o') && $('#5').hasClass('o')) && !$('#7').hasClass('x')) {
-		$block = $('#7');
-	} else if (($('#2').hasClass('o') && $('#5').hasClass('o') ||
-							$('#7').hasClass('o') && $('#9').hasClass('o')) && !$('#8').hasClass('x')) {
-		$block = $('#8');
-	} else if (($('#3').hasClass('o') && $('#6').hasClass('o') ||
-							$('#7').hasClass('o') && $('#8').hasClass('o') ||
-							$('#1').hasClass('o') && $('#5').hasClass('o')) && !$('#9').hasClass('x')) {
-		$block = $('#9');
+	if ((e[2] && e[3] || e[4] && e[7] || e[5] && e[9]) && !p[1]) {
+		e[1] = "o"
+		potentialBlock = $('#1');
+	} else if ((e[5] && e[7] || e[1] && e[3]) && !p[2]) {
+		e[2] = "o"
+		potentialBlock = $('#2');
+	} else if ((e[1] && e[2] || e[6] && e[9] || e[5] && e[7]) && !p[3]) {
+		e[3] = "o"
+		potentialBlock = $('#3');
+	}	else if ((e[5] && e[6] || e[1] && e[7]) && !p[4]) {
+		e[4] = "o"
+		potentialBlock = $('#4');
+	} else if ((e[4] && e[6] || e[2] && e[8] || e[1] && e[9] || e[3] && e[7]) && !p[5]) {
+		e[5] = "o"
+		potentialBlock = $('#5');
+	} else if ((e[3] && e[9] || e[4] && e[5]) && !p[6]) {
+		e[6] = "o"
+		potentialBlock = $('#6');
+	} else if ((e[1] && e[4] || e[8] && e[9] || e[3] && e[5]) && !p[7]) {
+		e[7] = "o"
+		potentialBlock = $('#7');
+	} else if ((e[2] && e[5] || e[7] && e[9]) && !p[8]) {
+		e[8] = "o"
+		potentialBlock = $('#8');
+	} else if ((e[3] && e[6] || e[7] && e[8] || e[1] && e[5]) && !p[9]) {
+		e[9] = "o"
+		potentialBlock = $('#9');
 
-	} else if (($('#1').hasClass('x') && $('#2').hasClass('x') ||
-							$('#6').hasClass('x') && $('#9').hasClass('x') ||
-							$('#5').hasClass('x') && $('#7').hasClass('x')) && !$('#3').hasClass('o')) {
-		$block = $('#3');
-	} else if (($('#2').hasClass('x') && $('#3').hasClass('x') ||
-							$('#4').hasClass('x') && $('#7').hasClass('x') ||
-							$('#5').hasClass('x') && $('#9').hasClass('x')) && !$('#1').hasClass('o')) {
-		$block = $('#1');
-	} else if (($('#5').hasClass('x') && $('#8').hasClass('x') ||
-							$('#1').hasClass('x') && $('#3').hasClass('x')) && !$('#2').hasClass('o')) {
-		$block = $('#2');
-	}	else if (($('#5').hasClass('x') && $('#6').hasClass('x') ||
-							$('#1').hasClass('x') && $('#7').hasClass('x')) && !$('#4').hasClass('o')) {
-		$block = $('#4');
-	} else if (($('#4').hasClass('x') && $('#6').hasClass('x') ||
-							$('#2').hasClass('x') && $('#8').hasClass('x') ||
-							$('#1').hasClass('x') && $('#9').hasClass('x') ||
-							$('#3').hasClass('x') && $('#7').hasClass('x')) && !$('#5').hasClass('o')) {
-		$block = $('#5');
-	} else if (($('#3').hasClass('x') && $('#9').hasClass('x') ||
-							$('#4').hasClass('x') && $('#5').hasClass('x')) && !$('#6').hasClass('o')) {
-		$block = $('#6');
-	} else if (($('#1').hasClass('x') && $('#4').hasClass('x') ||
-							$('#8').hasClass('x') && $('#9').hasClass('x') ||
-							$('#3').hasClass('x') && $('#5').hasClass('x')) && !$('#7').hasClass('o')) {
-		$block = $('#7');
-	} else if (($('#2').hasClass('x') && $('#5').hasClass('x') ||
-							$('#7').hasClass('x') && $('#9').hasClass('x')) && !$('#8').hasClass('o')) {
-		$block = $('#8');
-	} else if (($('#3').hasClass('x') && $('#6').hasClass('x') ||
-							$('#7').hasClass('x') && $('#8').hasClass('x') ||
-							$('#1').hasClass('x') && $('#5').hasClass('x')) && !$('#9').hasClass('o')) {
-		$block = $('#9');
+	} else if ((p[2] && p[3] || p[4] && p[7] || p[5] && p[9]) && !e[1]) {
+		e[1] = "o"
+		potentialBlock = $('#1');
+	} else if ((p[5] && p[8] || p[1] && p[3]) && !e[2]) {
+		e[2] = "o"
+		potentialBlock = $('#2');
+	}	else if ((p[1] && p[2] || p[6] && p[9] || p[5] && p[7]) && !e[3]) {
+		e[3] = "o"
+		potentialBlock = $('#3');
+	}	else if ((p[5] && p[6] || p[1] && p[7]) && !e[4]) {
+		e[4] = "o"
+		potentialBlock = $('#4');
+	} else if ((p[4] && p[6] || p[2] && p[8] || p[1] && p[9] || p[3] && p[7]) && !e[5]) {
+		e[5] = "o"
+		potentialBlock = $('#5');
+	} else if ((p[3] && p[9] || p[4] && p[5]) && !e[6]) {
+		e[6] = "o"
+		potentialBlock = $('#6');
+	} else if ((p[1] && p[4] || p[8] && p[9] || p[3] && p[5]) && !e[7]) {
+		e[7] = "o"
+		potentialBlock = $('#7');
+	} else if ((p[2] && p[5] || p[7] && p[9]) && !p[1]) {
+		e[1] = "o"
+		potentialBlock = $('#8');
+	} else if ((p[3] && p[6] || p[7] && p[8] || p[1] && p[5]) && !e[9]) {
+		e[9] = "o"
+		potentialBlock = $('#9');
 	} else {
-		$block = $(`#${arr[rand]}`);
+		potentialBlock = $(`#${arr[rand]}`);
 	}
 
-	if ($block.hasClass('o')) {
-		addOHard(arr,1000);
+	if (potentialBlock.hasClass('o')) {
+		hardGame(arr,1000);
 	}
 
-	$block.delay(delay).queue(function() {
-		$block.addClass('o');
-		var idCheckItem = $block.attr('id');
+	potentialBlock.delay(delay).queue(function() {
+		potentialBlock.addClass('o');
+		e[`${potentialBlock.attr('id')}`] = 'o'
+		let idCheckItem = potentialBlock.attr('id');
 		arrayID = jQuery.grep(arrayID, function(value) {
 			return value != idCheckItem;
 		});
-		$block.find('.cube__o').css('display', 'block');
+		potentialBlock.find('.cube__o').css('display', 'block');
 
 		if ($('.o').length >= 3) checkStatus();
 	})
 }
 
+function twoPlayers(player) {
+	mainSettings.first = !player
+}
+
 // check game status 
 function checkStatus() {
-	if ($('#1').hasClass('x') && $('#2').hasClass('x') && $('#3').hasClass('x') ||
-			$('#1').hasClass('o') && $('#2').hasClass('o') && $('#3').hasClass('o')) {
+	if (p[1] && p[2] && p[3] || e[1] && e[2] && e[3]) {
+		mainSettings.finish = true;
 		$('#1, #2, #3').addClass('finish');
+	} else if (p[1] && p[4] && p[7] || e[1] && e[4] && e[7]) {
 		mainSettings.finish = true;
-	} else if ($('#1').hasClass('x') && $('#4').hasClass('x') && $('#7').hasClass('x') ||
-							$('#1').hasClass('o') && $('#4').hasClass('o') && $('#7').hasClass('o')) {
 		$('#1, #4, #7').addClass('finish');
+	} else if (p[2] && p[5] && p[8] || e[2] && e[5] && e[8]) {
 		mainSettings.finish = true;
-	} else if ($('#2').hasClass('x') && $('#5').hasClass('x') && $('#8').hasClass('x') ||
-							$('#2').hasClass('o') && $('#5').hasClass('o') && $('#8').hasClass('o')) {
 		$('#2, #5, #8').addClass('finish');
+	} else if (p[1] && p[5] && p[9] || e[1] && e[5] && e[9]) {
 		mainSettings.finish = true;
-	} else if ($('#1').hasClass('x') && $('#5').hasClass('x') && $('#9').hasClass('x') ||
-							$('#1').hasClass('o') && $('#5').hasClass('o') && $('#9').hasClass('o')) {
 		$('#1, #5, #9').addClass('finish');
+	} else if (p[3] && p[6] && p[9] || e[3] && e[6] && e[9]) {
 		mainSettings.finish = true;
-	} else if ($('#3').hasClass('x') && $('#6').hasClass('x') && $('#9').hasClass('x') ||
-							$('#3').hasClass('o') && $('#6').hasClass('o') && $('#9').hasClass('o')) {
 		$('#3, #6, #9').addClass('finish');
+	} else if (p[4] && p[5] && p[6] || e[4] && e[5] && e[6]) {
 		mainSettings.finish = true;
-	} else if ($('#4').hasClass('x') && $('#5').hasClass('x') && $('#6').hasClass('x') ||
-							$('#4').hasClass('o') && $('#5').hasClass('o') && $('#6').hasClass('o')) {
 		$('#4, #5, #6').addClass('finish');
+	} else if (p[7] && p[8] && p[9] || e[7] && e[8] && e[9]) {
 		mainSettings.finish = true;
-	} else if ($('#7').hasClass('x') && $('#8').hasClass('x') && $('#9').hasClass('x') ||
-							$('#7').hasClass('o') && $('#8').hasClass('o') && $('#9').hasClass('o')) {
 		$('#7, #8, #9').addClass('finish');
+	} else if (p[3] && p[5] && p[7] || e[3] && e[5] && e[7]) {
 		mainSettings.finish = true;
-	} else if ($('#3').hasClass('x') && $('#5').hasClass('x') && $('#7').hasClass('x') ||
-							$('#3').hasClass('o') && $('#5').hasClass('o') && $('#7').hasClass('o')) {
 		$('#3, #5, #7').addClass('finish');
-		mainSettings.finish = true;
 	} else if ($('.x').length === 5 || $('.o').length === 5) {
-		showMessage("НИЧЬЯ");
+		showMessage("DRAW");
 		mainSettings.finish = true;
 	}
 
 	if ($('.x.finish').length) {
-		showMessage("ПОБЕДА!");
-		$('.win-img').animate({bottom:0},1000);
+		if (!mainSettings.twoPlayers) {
+			showMessage("WIN!");
+			$('.win-img').animate({bottom:0},1000);
+		} else {
+			showMessage("X WINS!");
+		}
 	}
 
 	if ($('.o.finish').length) {
-		showMessage("ПРОИГРЫШ!");
-		$('.img-loser-1, .img-loser-2, .img-loser-3').delay(1000).animate({top:0},700);
-		$('.img-loser-4, .img-loser-5, .img-loser-6').delay(1000).animate({bottom:0},700);
+		if (!mainSettings.twoPlayers) {
+			showMessage("LOSE!");
+			$('.img-loser-1, .img-loser-2, .img-loser-3').delay(1000).animate({top:0},700);
+			$('.img-loser-4, .img-loser-5, .img-loser-6').delay(1000).animate({bottom:0},700);
+		} else {
+			showMessage("O WINS!");
+		}
 	}
 }
 
 // click on empty cube
 $('.cube').click(function() {
-	if (!$(this).hasClass('x') && !$(this).hasClass('o')) {
-		if (!mainSettings.finish && $('.x').length === $('.o').length) {
-			var idCheckItem = $(this).attr('id');
-			mainSettings[`${idCheckItem}`] = 'x'
-	    arrayID = jQuery.grep(arrayID, function(value) {
-	      return value != idCheckItem;
-	    });
+	let idCheckItem = $(this).attr('id');
 
-			addX(this);
+
+	if (!$(this).hasClass('x') && !$(this).hasClass('o')) {
+
+		if (!mainSettings.finish && !mainSettings.twoPlayers && $('.x').length === $('.o').length) {
+			p[`${idCheckItem}`] = 'x'
+			arrayID = jQuery.grep(arrayID, function(value) {
+				return value != idCheckItem;
+			});
+
+			addSymbol(this, 'x');
 			
 			if ($('.x').length >= 3) checkStatus()
 
 			if (!mainSettings.finish) {
 				if (mainSettings.level === 'light') {
-					addOLight(arrayID);
+					ligthGame(arrayID);
+				} else if (mainSettings.level === 'middle') {
+					hardGame(arrayID, 1000);
+				} else if (mainSettings.level === 'players') {
+					twoPlayers(mainSettings.first);
 				}
-				if (mainSettings.level === 'middle') {
-					addOHard(arrayID, 1000);
-				}
+			}
+		} else if (!mainSettings.finish && mainSettings.twoPlayers) {
+			if (mainSettings.first) {
+				p[`${idCheckItem}`] = 'x'
+				addSymbol(this, 'x');
+			} else {
+				e[`${idCheckItem}`] = 'o'
+				addSymbol(this, 'o');
+			}
+			
+			if ($('.x').length >= 3 || $('.o').length >= 3) checkStatus()
+
+			if (!mainSettings.finish) {
+				twoPlayers(mainSettings.first);
 			}
 		}
 
-		if (!mainSettings.finish && mainSettings.level === 'hard' && $('.o')) {
-			var idCheckItem = $(this).attr('id');
-	    arrayID = jQuery.grep(arrayID, function(value) {
-	      return value != idCheckItem;
+		if (!mainSettings.finish && mainSettings.level === 'hard' && $('.x').length < $('.o').length) {
+			p[`${idCheckItem}`] = 'x'
+			arrayID = jQuery.grep(arrayID, function(value) {
+				return value != idCheckItem;
 			});
-			
-			addX(this);
+			addSymbol(this, 'x');
 
 			if ($('.x').length >= 3) checkStatus()
 
 			if (!mainSettings.finish) {
-				addOHard(arrayID, 1000);
+				hardGame(arrayID, 1000);
 			}
 		}
 	}
@@ -264,29 +274,31 @@ function start() {
 		});
 }
 
-// check level & start game
-function levelSelection(event) {
-	if (event.hasClass('light')) {
-		// $('.wrapper').addClass('light')
-		mainSettings.level = 'light'
-		start()
-	}
-	if (event.hasClass('middle')) {
-		// $('.wrapper').addClass('middle')
-		mainSettings.level = 'middle'
-		start()
-	}
-	if (event.hasClass('hard')) {
-		// $('.wrapper').addClass('hard');
-		mainSettings.level = 'hard'
-		start();
-		addOHard(arrayID, 300);
-	}
-}
+$('.level.computer').click(function() {
+	$('.levels.options').hide()
+	$('.levels.showing').show()
+})
+
+$('.level.player').click(function() {
+	mainSettings.twoPlayers = true
+	mainSettings.level = 'players'
+	start();
+})
 
 // level click
 $('.level').click(function() {
-	levelSelection($(this))
+	const self = $(this)
+	if (self.hasClass('light')) {
+		mainSettings.level = 'light'
+		start()
+	} else if (self.hasClass('middle')) {
+		mainSettings.level = 'middle'
+		start()
+	} else if (self.hasClass('hard')) {
+		mainSettings.level = 'hard'
+		start();
+		hardGame(arrayID, 300);
+	}
 })
 
 
@@ -295,10 +307,10 @@ $('.level').click(function() {
 // show status message
 var showMessage = function(text) {
 	$('.wrapper').css('z-index', '-1');
-	$('.message').html(text);
-	$('.message').css('visibility','visible').animate({
-		opacity: 1
-	}, 700);
+	$('.message')
+		.html(text)
+		.css('visibility','visible')
+		.animate({opacity: 1}, 700)
 }
 
 // reload game

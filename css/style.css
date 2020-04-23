@@ -1,6 +1,7 @@
 body {
 	margin: 0;
-	overflow: hidden;
+  overflow: hidden;
+  font-family: sans-serif;
 }
 .wrapper {
   width: 900px;
@@ -152,7 +153,6 @@ body {
   border-radius: 5px;
   background: #423ed8;
   color: #eeeeee;
-  font-family: sans-serif;
   text-align: center;
   text-transform: uppercase;
   cursor: pointer;
